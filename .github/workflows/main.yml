@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -21,8 +21,15 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
+          # Install capacitor CLI secara lokal agar bisa dipanggil npx
+          npm install @capacitor/cli @capacitor/core @capacitor/android
           npm run build
-          npx cap sync android
+
+      - name: Capacitor Sync
+        run: |
+          # Perintah ini akan membuat folder android jika belum ada
+          # atau melakukan sinkronisasi jika sudah ada
+          npx cap sync android || (npx cap add android && npx cap sync android)
 
       - name: Build with Gradle
         run: |
