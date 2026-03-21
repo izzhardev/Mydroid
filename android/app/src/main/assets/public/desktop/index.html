@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Desktop Mode - AirDroid Clone</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #e5e5e5; }
+        .navbar { background: #333; color: white; padding: 1rem; text-align: center; }
+        .container { display: flex; padding: 20px; gap: 20px; }
+        .card { background: white; border-radius: 8px; padding: 20px; flex: 1; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h2 { color: #333; border-bottom: 2px solid #646cff; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>AirDroid Web Dashboard</h1>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>File Manager</h2>
+            <p>Daftar file di HP Anda akan muncul di sini.</p>
+            <ul id="fileList">
+                <li>Menunggu koneksi data...</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h2>Informasi Perangkat</h2>
+            <p>Status: Terhubung</p>
+        </div>
+    </div>
+</body>
+</html>
