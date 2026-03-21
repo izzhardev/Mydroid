@@ -31,11 +31,15 @@ jobs:
           # atau melakukan sinkronisasi jika sudah ada
           npx cap sync android || (npx cap add android && npx cap sync android)
 
+      - name: Accept Android Licenses
+        run: yes | sdkmanager --licenses || true
+
       - name: Build with Gradle
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          # Menambahkan stacktrace agar kita bisa lihat error aslinya jika gagal lagi
+          ./gradlew assembleDebug --stacktrace --info
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
