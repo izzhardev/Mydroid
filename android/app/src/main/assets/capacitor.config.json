@@ -1,9 +1,10 @@
 {
 	"appId": "com.izzhartech.airdroid",
-	"appName": "my-airdroid",
+	"appName": "Mydroid",
 	"webDir": "dist",
-	"bundledWebRuntime": false,
 	"server": {
-		"androidScheme": "http"
+		"androidScheme": "http",
+		"cleartext": true,
+		"hostname": "0.0.0.0"
 	}
 }
