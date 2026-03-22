@@ -1,9 +1,13 @@
-const startAirDroidServer = async () => {
+import './style.css'
+import { Filesystem, Directory } from '@capacitor/filesystem';
+
+await Filesystem.requestPermissions();
+const startServer = () => {
   const el = document.querySelector('#app');
   const httpd = window.cordova?.plugins?.CorHttpd;
 
   if (!httpd) {
-    el.innerHTML = 'Plugin tidak ada';
+    el.innerHTML = `<h2>❌ HTTP Server tidak ditemukan</h2>`;
     return;
   }
 
@@ -15,12 +19,28 @@ const startAirDroidServer = async () => {
 
     httpd.getURL((url) => {
       el.innerHTML = `
-        <h2>✅ Server Aktif</h2>
-        <p>${url}</p>
+        <div style="padding:20px;text-align:center">
+          <h2>✅ MyDroid Aktif</h2>
+          <p>Buka di Laptop:</p>
+          <h3>${url}desktop/index.html</h3>
+        </div>
       `;
     });
 
   }, (err) => {
-    el.innerHTML = `<h2>Error: ${err}</h2>`;
+    el.innerHTML = `<h2>❌ Error: ${err}</h2>`;
   });
 };
+
+// 🔥 Fungsi menerima file dari browser
+window.uploadFileToPhone = async (filename, dataUrl) => {
+  const base64 = dataUrl.split(',')[1];
+
+  await Filesystem.writeFile({
+    path: filename,
+    data: base64,
+    directory: Directory.Documents,
+  });
+};
+
+document.addEventListener('deviceready', startServer, false);
