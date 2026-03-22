@@ -1,4 +1,4 @@
- {
+{
   "name": "my-airdroid",
   "version": "0.0.0",
   "private": true,
@@ -6,13 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync": "cap sync android"
   },
   "devDependencies": {
     "vite": "^8.0.1"
   },
   "dependencies": {
     "@capacitor/android": "^8.2.0",
+    "@capacitor/cli": "^8.2.0",
+    "@capacitor/core": "^8.2.0",
     "@capacitor/filesystem": "^8.1.2",
     "@capacitor/network": "^8.0.1",
     "cordova-plugin-httpd": "^0.9.3"
