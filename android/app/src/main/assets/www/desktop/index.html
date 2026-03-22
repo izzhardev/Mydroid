@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MyDroid Desktop</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #1e1e2f;
+  color: white;
+}
+
+.topbar {
+  background: #111;
+  padding: 10px 20px;
+  font-size: 18px;
+}
+
+.container {
+  display: flex;
+  height: calc(100vh - 50px);
+}
+
+.sidebar {
+  width: 200px;
+  background: #2a2a40;
+  padding: 15px;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  background: #4CAF50;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.main {
+  flex: 1;
+  padding: 20px;
+  background: #f5f5f5;
+  color: black;
+}
+
+.dropzone {
+  border: 2px dashed #aaa;
+  padding: 40px;
+  text-align: center;
+  border-radius: 10px;
+  background: white;
+}
+
+.file-list {
+  margin-top: 20px;
+}
+
+.file-item {
+  padding: 10px;
+  background: #fff;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  📡 MyDroid - Wireless Transfer
+</div>
+
+<div class="container">
+
+  <div class="sidebar">
+    <h3>Menu</h3>
+    <button onclick="pickFile()">📤 Upload File</button>
+  </div>
+
+  <div class="main">
+
+    <h2>📂 Transfer File ke HP</h2>
+
+    <div class="dropzone" id="dropzone">
+      Drag & Drop file ke sini
+    </div>
+
+    <input type="file" id="fileInput" style="display:none"/>
+
+    <div class="file-list" id="fileList"></div>
+
+  </div>
+
+</div>
+
+<script>
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const fileList = document.getElementById('fileList');
+
+function pickFile() {
+  fileInput.click();
+}
+
+fileInput.addEventListener('change', (e) => {
+  handleFile(e.target.files[0]);
+});
+
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+});
+
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  handleFile(file);
+});
+
+function handleFile(file) {
+  if (!file) return;
+
+  const item = document.createElement('div');
+  item.className = 'file-item';
+  item.innerText = `Uploading: ${file.name}`;
+  fileList.appendChild(item);
+
+  uploadToPhone(file, item);
+}
+
+function uploadToPhone(file, el) {
+  const reader = new FileReader();
+
+  reader.onload = async () => {
+    try {
+      await window.uploadFileToPhone(file.name, reader.result);
+      el.innerText = `✅ ${file.name} berhasil dikirim`;
+    } catch (e) {
+      el.innerText = `❌ Gagal: ${file.name}`;
+    }
+  };
+
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>

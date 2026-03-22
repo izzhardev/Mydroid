@@ -12,7 +12,7 @@ const startServer = () => {
   }
 
   httpd.startServer({
-    www_root: '',
+    www_root: 'www',
     port: 8080,
     localhost_only: false
   }, () => {
