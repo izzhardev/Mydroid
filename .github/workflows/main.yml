@@ -21,28 +21,18 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
-          # Install capacitor CLI secara lokal agar bisa dipanggil npx
-          npm install @capacitor/cli @capacitor/core @capacitor/android
           npm run build
-
-      - name: Capacitor Sync
-        run: |
-          # Perintah ini akan membuat folder android jika belum ada
-          # atau melakukan sinkronisasi jika sudah ada
-          npx cap sync android || (npx cap add android && npx cap sync android)
-
-      - name: Accept Android Licenses
-        run: yes | sdkmanager --licenses || true
+          npx cap sync android
 
       - name: Build with Gradle
         run: |
           cd android
           chmod +x gradlew
-          # Menambahkan stacktrace agar kita bisa lihat error aslinya jika gagal lagi
-          ./gradlew assembleDebug --stacktrace --info
+          # Menjalankan 'clean' sebelum 'assembleDebug' untuk membuang sampah build
+          ./gradlew clean assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: airdroid-clone-debug
+          name: airdroid-clone-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
