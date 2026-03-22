@@ -12,7 +12,7 @@ const startServer = () => {
   }
 
   httpd.startServer({
-    www_root: 'public',
+    www_root: '',
     port: 8080,
     localhost_only: false
   }, () => {
@@ -22,7 +22,7 @@ const startServer = () => {
         <div style="padding:20px;text-align:center">
           <h2>✅ MyDroid Aktif</h2>
           <p>Buka di Laptop:</p>
-          <h3>${url}desktop/index.html</h3>
+          <h3>${url}/desktop/index.html</h3>
         </div>
       `;
     });
