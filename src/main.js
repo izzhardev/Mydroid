@@ -11,7 +11,7 @@ const startAirDroidServer = async () => {
 
     if (httpd) {
       httpd.startServer({
-        'www_root': 'desktop',
+        'www_root': 'www/desktop',
         'port': 8080,
         'localhost_only': false 
       }, (url) => {
