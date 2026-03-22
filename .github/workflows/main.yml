@@ -13,32 +13,31 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Node.js
+      - name: Setup Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24 # Kita pakai versi 24 agar jauh melampaui syarat minimum
 
       - name: Install Dependencies
         run: |
           npm install
-          # Pastikan capacitor terinstall di runner
           npm install @capacitor/cli @capacitor/android
           npm run build
 
       - name: Capacitor Sync
         run: |
-          # Menggunakan npx secara eksplisit atau direct path
-          ./node_modules/.bin/cap sync android || npx cap sync android
+          # Sekarang Node sudah versi 24, perintah ini pasti jalan
+          npx cap sync android
 
       - name: Build with Gradle
         run: |
           cd android
           chmod +x gradlew
-          # Menjalankan 'clean' sebelum 'assembleDebug' untuk membuang sampah build
-          ./gradlew clean assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: airdroid-clone-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
