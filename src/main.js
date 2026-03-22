@@ -9,17 +9,24 @@ const startAirDroidServer = async () => {
   if (status.connected) {
     const httpd = window.cordova?.plugins?.CorHttpd;
 
-  httpd.startServer({
-    'www_root': '', // KOSONGKAN: Ini akan memaksa server menggunakan root folder aset
+   httpd.startServer({
+    'www_root': '/', // Gunakan slash tunggal
     'port': 8080,
     'localhost_only': false
 }, (url) => {
-    // Jika berhasil, panggil folder desktop di URL
-    const desktopUrl = url + "desktop/index.html";
-    console.log("Akses di: " + desktopUrl);
-    document.querySelector('#app').innerHTML = `<h1>Buka: ${desktopUrl}</h1>`;
+    // Memperbaiki format URL agar tidak dempet (8080/desktop)
+    const formattedUrl = url.endsWith('/') ? url : url + '/';
+    const desktopUrl = formattedUrl + "desktop/index.html";
+    
+    document.querySelector('#app').innerHTML = `
+        <div style="padding: 20px; text-align: center;">
+            <h1 style="color: green;">Server Aktif!</h1>
+            <p>Buka di Laptop:</p>
+            <a href="${desktopUrl}" style="word-break: break-all;">${desktopUrl}</a>
+        </div>
+    `;
 }, (err) => {
-    console.error("Gagal: " + err);
+    alert("Gagal total: " + err);
 });
 
 }
