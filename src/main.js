@@ -1,46 +1,41 @@
-import './style.css'
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import { WebSocketServer } from 'ws';
 
-await Filesystem.requestPermissions();
 const startServer = () => {
   const el = document.querySelector('#app');
-  const httpd = window.cordova?.plugins?.CorHttpd;
 
-  if (!httpd) {
-    el.innerHTML = `<h2>❌ HTTP Server tidak ditemukan</h2>`;
-    return;
-  }
+  const wss = new WebSocketServer({ port: 8080 });
 
-  httpd.startServer({
-    www_root: 'www',
-    port: 8080,
-    localhost_only: false
-  }, () => {
+  wss.on('connection', (ws) => {
+    console.log('Client connected');
 
-    httpd.getURL((url) => {
-      el.innerHTML = `
-        <div style="padding:20px;text-align:center">
-          <h2>✅ MyDroid Aktif</h2>
-          <p>Buka di Laptop:</p>
-          <h3>${url}/desktop/index.html</h3>
-        </div>
-      `;
+    ws.on('message', async (message) => {
+      try {
+        const data = JSON.parse(message);
+
+        if (data.type === 'upload') {
+          await Filesystem.writeFile({
+            path: data.name,
+            data: data.base64,
+            directory: Directory.Documents,
+          });
+
+          ws.send(JSON.stringify({
+            type: 'success',
+            name: data.name
+          }));
+        }
+
+      } catch (err) {
+        ws.send(JSON.stringify({ type: 'error' }));
+      }
     });
-
-  }, (err) => {
-    el.innerHTML = `<h2>❌ Error: ${err}</h2>`;
   });
+
+  el.innerHTML = `
+    <h2>✅ Server Aktif</h2>
+    <p>ws://IP_HP:8080</p>
+  `;
 };
 
-// 🔥 Fungsi menerima file dari browser
-window.uploadFileToPhone = async (filename, dataUrl) => {
-  const base64 = dataUrl.split(',')[1];
-
-  await Filesystem.writeFile({
-    path: filename,
-    data: base64,
-    directory: Directory.Documents,
-  });
-};
-
-document.addEventListener('deviceready', startServer, false);
+document.addEventListener('deviceready', startServer);
